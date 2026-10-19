@@ -7,8 +7,7 @@ results are in [validation_and_performance.md](validation_and_performance.md).
 vk_oidn runs the `RT` filter of [Intel® Open Image Denoise](https://github.com/RenderKit/oidn)
 (OIDN): a U-Net convolutional network trained to remove Monte Carlo noise from rendered images,
 optionally guided by albedo and normal images. The network weights are OIDN's; the GPU kernels
-and the runtime are vk_oidn's (derived from the Vulkan backend of the
-[OIDN fork](https://github.com/mklefrancois/oidn-vulkan)).
+and the runtime are vk_oidn's.
 
 ## 1. Integration in a Vulkan application
 
@@ -205,7 +204,8 @@ Design points:
   cooperative matrix loads from global memory, which were the main cost of the kernel. With the
   48 KB of shared memory available to a Vulkan workgroup, they fit only single-buffered next to
   the double-buffered 32x8 input tiles, hence a second barrier per chunk. This made the
-  convolutions 1.2-2x faster (1080p high quality: 6.72 → 5.01 ms).
+  convolutions 1.2-2x faster (1080p high quality: 25% less GPU time for the whole network,
+  6.72 → 5.01 ms in the development measurements).
 - **Pooling fusion**: each subgroup owns two consecutive output rows, which are exactly the rows
   of the 2x2 pooling windows, so pooling needs no exchange between subgroups.
 - **Upsampling and concatenation fusion**: the concatenation is done while loading the input

@@ -29,10 +29,6 @@ prebuilt SDK packages are on the [releases page](https://github.com/nvpro-sample
 Example: the `oidn_denoiser` sample of vk_mini_samples (path-traced Cornell box, denoiser with
 albedo and normal guides).
 
-The reference implementation is the Vulkan backend of the Open Image Denoise fork in
-[mklefrancois/oidn-vulkan](https://github.com/mklefrancois/oidn-vulkan) (branch `vulkan`), which
-is used to validate the output of this library.
-
 ## Usage
 
 The denoiser takes the noisy color (HDR or LDR) and, optionally, two guide images of the first
@@ -89,27 +85,41 @@ See [`tests/denoise_test.cpp`](tests/denoise_test.cpp) for a complete example. T
 can be reproduced with [`tests/scripts`](tests/scripts) (image generator and validation script, see
 the [validation document](docs/validation_and_performance.md)). It is also a
 command-line tool: `vk_oidn_denoise_test --hdr color.pfm --alb albedo.pfm --nrm normal.pfm -o out.pfm`
-(`-r ref.pfm` compares with a reference, `-n 50` measures the GPU time, `--images` uses storage
-image views instead of buffers).
+(`-r ref.pfm` compares with a reference, `-n 50` measures the GPU time, `--bench` the per-image
+latency, `--images` uses storage image views instead of buffers).
 
 Validation: on 22 configurations (HDR/LDR/sRGB, albedo/normal/clean aux, all qualities, half
-images, fixed input scale, tiled), the output matches the OIDN CPU reference (as accurately as
-OIDN's CUDA backend), and is bit-identical to the Vulkan backend of the OIDN fork when the
-sub-pixel optimization is disabled. The validation layer reports no errors.
+images, fixed input scale, tiled), the output matches the reference of the official Open Image
+Denoise 2.5.1 CPU device, as accurately as OIDN's CUDA device. The validation layer reports no
+errors.
 
-GPU time on an NVIDIA RTX PRO 4500 Blackwell (hdr + albedo + normal):
+GPU time per image on an NVIDIA RTX PRO 4500 Blackwell, compared with the official Open Image
+Denoise 2.5.1 CUDA device: same filter (hdr + albedo + normal), same FP32 images in device memory,
+same method (50 denoisings back to back, after a warm-up batch), median of 5 runs:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/perf_dark.png">
-  <img alt="GPU time per image: vk_oidn is 1.5 to 1.9 times faster than Open Image Denoise's CUDA backend at 1920x1080 and 3840x2160" src="docs/images/perf_light.png">
+  <img alt="GPU time per image: vk_oidn is 1.5 to 1.8 times faster than Open Image Denoise 2.5.1's CUDA device at 1920x1080 and 3840x2160" src="docs/images/perf_light.png">
 </picture>
 
-| Resolution | Quality | vk_oidn   | OIDN 2.5.1 CUDA |
-|------------|---------|-----------|-----------------|
-| 1920x1080  | high    | 5.01 ms   | 8.10 ms         |
-| 1920x1080  | fast    | 2.89 ms   | 5.55 ms         |
-| 3840x2160  | high    | 22.77 ms  | 34.65 ms        |
-| 3840x2160  | fast    | 12.55 ms  | 23.41 ms        |
+| Resolution | Quality | vk_oidn   | OIDN 2.5.1 CUDA | Speedup |
+|------------|---------|-----------|-----------------|---------|
+| 1280x720   | high    | 2.48 ms   | 3.56 ms         | 1.43x   |
+| 1920x1080  | high    | 5.65 ms   | 8.56 ms         | 1.51x   |
+| 3840x2160  | high    | 24.39 ms  | 35.89 ms        | 1.47x   |
+| 1280x720   | fast    | 1.35 ms   | 2.46 ms         | 1.82x   |
+| 1920x1080  | fast    | 3.18 ms   | 5.80 ms         | 1.83x   |
+| 3840x2160  | fast    | 13.67 ms  | 24.29 ms        | 1.78x   |
+
+The output is as accurate as the CUDA device's (average relative error against the OIDN CPU device:
+0.00034 vs 0.00059 in high quality, 0.00114 vs 0.00108 in fast quality). The per-image latency
+(OIDN's `oidnBenchmark` metric: execute and wait for each image) gives the same picture, 1.42-1.47x
+in high quality and 1.69-1.73x in fast quality, and Nsight Systems, profiling the CUDA kernels and
+the Vulkan command buffers with the same tool, confirms the GPU times (1.48-1.54x and 1.82-1.86x,
+counting only the time the CUDA kernels run). The protocol, all results with their spread, the
+raw logs and the scripts to reproduce them are in
+[docs/validation_and_performance.md](docs/validation_and_performance.md#performance) and
+[docs/benchmarks](docs/benchmarks).
 
 ## Adding vk_oidn to a project
 
@@ -172,27 +182,33 @@ release.
 
 ## Shaders
 
-All kernels are in a single Slang file, [`shaders/vk_oidn.slang`](shaders/vk_oidn.slang), compiled
-at build time to SPIR-V (13 kernels, each with and without FP16 float controls) and embedded in
-the library. `tools/spirv_float_controls.py` adds the FP16 round-to-nearest-even execution mode,
-which Slang has no option for.
+All the kernels are written in [Slang](https://shader-slang.org), in a single file,
+[`shaders/vk_oidn.slang`](shaders/vk_oidn.slang). At build time, CMake compiles them to SPIR-V with
+`slangc` (from the Vulkan SDK) and embeds them in the library: an application ships no shader files.
 
-The kernels have the same interface as the GLSL kernels of the
-[OIDN fork](https://github.com/mklefrancois/oidn-vulkan), which can load them instead of its own
-(`OIDN_VULKAN_KERNEL_DIR=<build>/spv`). This was used to validate them: identical results on the
-whole accuracy test matrix, all `oidnTest` tests passing, clean validation layer.
+| Kernels | Purpose |
+|---------|---------|
+| `conv_coopmat_*` | 3x3 convolutions on the tensor cores (`VK_KHR_cooperative_matrix`, FP16 inputs), with the pooling and the concatenation of the skip connections fused in |
+| `conv_coopmat_up_*` | the convolutions that follow an upsampling, computed as four 2x2 convolutions on the low-resolution input (sub-pixel decomposition) |
+| `conv_simple` | convolutions without cooperative matrices, for the other GPUs |
+| `input_process`, `output_process`, `image_copy` | conversion between the application's images (buffers or storage images, FP32 or FP16) and the network's tensors |
+| `autoexposure_*` | automatic exposure of HDR inputs |
 
-Performance on an NVIDIA RTX PRO 4500 Blackwell (`oidnBenchmark`, RT hdr+alb+nrm):
+The convolution kernels exist in variants: one or two blocks of output channels per workgroup
+(`_nf1`, `_nf2`), and FP32 or FP16 accumulation (`_f16acc`, used by the fast and balanced
+qualities). Every kernel is compiled twice: with FP16 float controls (round-to-nearest-even and
+denormal preservation, so that every GPU rounds the same way; Slang has no option for the rounding
+mode, which [`tools/spirv_float_controls.py`](tools/spirv_float_controls.py) adds to the SPIR-V),
+and without them (`_nofc`) for devices that do not support them.
 
-| Resolution | Quality | OIDN CUDA | GLSL kernels | Slang kernels |
-|------------|---------|-----------|--------------|---------------|
-| 1920x1080  | high    | 8.10 ms   | 8.12 ms      | **7.50 ms**   |
-| 3840x2160  | high    | 34.65 ms  | 33.66 ms     | **30.72 ms**  |
-| 1920x1080  | fast    | 5.55 ms   | 4.14 ms      | 4.17 ms       |
-| 3840x2160  | fast    | 23.41 ms  | 16.50 ms     | 16.50 ms      |
+The kernels are compiled with `-O1` and use `[unroll]` hints rather than `[ForceUnroll]`: both were
+measurably faster (see [docs/validation_and_performance.md](docs/validation_and_performance.md)).
+`VK_OIDN_KERNEL_DIR=<build>/spv` loads the compiled kernels from a directory instead of the embedded
+ones, to work on a kernel without relinking the application.
 
-Notes: the kernels are compiled with `-O1` and use `[unroll]` hints rather than `[ForceUnroll]`;
-both choices were measurably faster (full front-end unrolling was ~20% slower).
+`shaders/experimental/conv_cm2.comp` is an experimental GLSL kernel for
+`VK_NV_cooperative_matrix2`, built when `glslangValidator` is available and used only with
+`VK_OIDN_CM2=1`; it is correct but slower than the Slang kernels.
 
 ## Debugging environment variables
 
@@ -211,15 +227,6 @@ The `weights/` folder contains the Open Image Denoise `RT` filter weights conver
 GPU-ready format by `tools/pack_weights.py` (layer graph + FP16 weight tiles in the layout of the
 convolution kernels). They are embedded in the library by default (`VK_OIDN_EMBED_WEIGHTS`,
 requires Python 3 at build time). See [weights/README.md](weights/README.md).
-
-## Changelog
-
-**0.2.0** (breaking API change): the enumerators have the `e` prefix of Vulkan-Hpp, so that they
-cannot collide with macros of other headers (X11 defines `Success`, which broke `Result::Success`
-in applications including GLFW or Xlib on Linux). Rename `Result::Success` to `Result::eSuccess`,
-`Result::Error*` to `Result::eError*`, `Quality::Fast/Balanced/High` to
-`Quality::eFast/eBalanced/eHigh` and `Format::Float/Half` to `Format::eFloat/eHalf`.
-`find_package(vk_oidn 0.2)` is required (0.1 packages are not compatible).
 
 ## License
 

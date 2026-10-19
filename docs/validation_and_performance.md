@@ -10,12 +10,10 @@ library works is described in [architecture.md](architecture.md).
 |--------------------|--------------------------------------------------------------------|
 | GPU                | NVIDIA RTX PRO 4500 Blackwell (Vulkan 1.4.351, driver 617.42)      |
 | Second GPU         | AMD Radeon integrated graphics (RDNA2, driver 26.8.1), used only for portability checks |
-| Laptop GPU         | NVIDIA RTX 3500 Ada Generation Laptop GPU (12 GB, 95 W max, driver 616.64), used only for performance (see [Laptop results](#laptop-results-rtx-3500-ada-generation)) |
 | OS / compiler      | Windows 11, MSVC 19.44 (Visual Studio 2022), Release builds        |
 | Vulkan SDK         | 1.4.363.0 (validation layer, glslang 16.6.0)                       |
 | Slang              | 2026.17 (from the Vulkan SDK)                                      |
 | OIDN reference     | official Open Image Denoise 2.5.1 Windows binaries (CPU and CUDA devices) |
-| OIDN Vulkan fork   | [mklefrancois/oidn-vulkan](https://github.com/mklefrancois/oidn-vulkan), branch `vulkan` |
 
 ## Test images
 
@@ -39,55 +37,18 @@ The same metric as OIDN's `oidnDenoise -r`: for every channel value, the relativ
 absolute error above 0.02 *and* a relative error above 0.05).
 
 The reference is always the output of the OIDN 2.5.1 **CPU** device for the same configuration.
-On top of the metric, outputs were compared **bit for bit** between implementations that should
-be identical (e.g. vk_oidn and the OIDN fork running the same kernels).
+On top of the metric, outputs that should be identical were compared **bit for bit** (e.g.
+vk_oidn with buffers and with storage image views).
 
 ## Validation results
-
-### OIDN fork, Vulkan backend (GLSL kernels) vs CPU
-
-333x197, all configurations of `oidnDenoise` (RT filter). For comparison, the official CUDA device
-on the same GPU gives 0.000591 (`hdr_alb_nrm`), 0.0156 (`nrm`), 0.00107 (fast) and 0.00124
-(balanced) on a 320x200 image of the same scene: the Vulkan backend is at least as accurate.
-
-| Configuration | Description                          | avgerror  | Outliers |
-|---------------|--------------------------------------|-----------|----------|
-| hdr           | HDR color                            | 0.000334  | 0 |
-| hdr_alb       | HDR + albedo                         | 0.000337  | 0 |
-| hdr_alb_nrm   | HDR + albedo + normal                | 0.000340  | 0 |
-| hdr_calb_cnrm | HDR + clean albedo/normal (large network) | 0.000313 | 0 |
-| hdr_alb_nrm_f | fast quality (small network, FP16 accumulation) | 0.00117 | 0 |
-| hdr_alb_nrm_b | balanced quality (FP16 accumulation) | 0.00135  | 0 |
-| hdr_is        | fixed input scale 0.5                | 0.000483  | 0 |
-| ldr           | LDR color                            | 0.000222  | 0 |
-| ldr_srgb_alb  | sRGB LDR + albedo                    | 0.000100  | 0 |
-| alb           | albedo filtering                     | 0.000318  | 0 |
-| nrm           | normal filtering                     | 0.00824   | 0 |
-| hdr_half      | FP16 images                          | 0.000341  | 0 |
-| hdr_inplace   | output aliases the color image       | 0.000340  | 0 |
-| hdr_devbuf    | device-local buffers                 | 0.000340  | 0 |
-
-All 20 test cases of OIDN's `oidnTest` (about 2000 assertions) pass on the Vulkan device, and the
-Khronos validation layer reports no errors, both for a device created by OIDN and for a device
-created by the application (`apps/oidnVulkanInterop.cpp`, whose output is bit-identical to the
-standalone device).
-
-### Slang kernels (loaded by the OIDN fork)
-
-The Slang kernels have the same interface as the GLSL ones, so the OIDN fork can run them
-(`OIDN_VULKAN_KERNEL_DIR=<vk_oidn build>/spv`). With them, every value of the table above is
-identical, at 333x197 and 1920x1080, with and without cooperative matrices; `oidnTest` passes and
-the validation layer is clean.
 
 ### vk_oidn SDK
 
 Run with [`tests/scripts/run_validation.sh`](../tests/scripts/run_validation.sh), which drives
 `vk_oidn_denoise_test` (a standalone application creating its own Vulkan device with the vk_oidn
 requirement helpers). Every configuration passes against the CPU reference at 333x197 and
-1920x1080. vk_oidn uses a sub-pixel decomposition for the upsampling layers (see the
-performance section), which the OIDN fork does not have; with it disabled
-(`VK_OIDN_SUBPIXEL=0`), the output is **bit-identical** to the OIDN fork running the same kernels
-in every configuration.
+1920x1080, with the sub-pixel decomposition of the upsampling layers (see the performance section)
+and without it (`VK_OIDN_SUBPIXEL=0`, in parentheses below).
 
 | Configuration | Weights selected          | Tiles (1080p) | avgerror, 333x197 (`VK_OIDN_SUBPIXEL=0`) |
 |---------------|---------------------------|---------------|-------------------------------------------|
@@ -116,12 +77,10 @@ To reproduce:
 
 ```
 export OIDN_REF_DENOISE=<OIDN 2.5.1>/bin/oidnDenoise.exe      # CPU reference
-export OIDN_FORK_DENOISE=<oidn-vulkan build>/oidnDenoise.exe  # optional bit-identity check
 tests/scripts/run_validation.sh images/odd
 tests/scripts/run_validation.sh images/odd --images
 ```
 
-The bit-identity check against the fork uses a second vk_oidn run with `VK_OIDN_SUBPIXEL=0`.
 `VK_OIDN_TEST_ARGS=--validation` runs every test with the Khronos validation layer and fails on
 any validation error.
 
@@ -160,8 +119,6 @@ The whole run takes about 3 seconds per mode on a 32-thread CPU. The
 | Output biased on AMD | avgerror ~0.004 instead of ~0.0003, image 1% darker | the driver rounds FP32 → FP16 conversions toward zero by default | request round-to-nearest-even and FP16 denormal preservation (SPIR-V float controls) in all kernels |
 | FP16 images wrong on AMD | avgerror 0.08 with half input images | 16-bit loads from addresses that are not 4-byte aligned (6-byte RGB pixels) returned wrong data | load FP16 pixels with aligned 32-bit loads |
 | FP16 storage image output | avgerror 0.00037 instead of 0.00034 | the rounding of the storage image format conversion is implementation-defined | round to FP16 in the shader when the output view format is FP16 |
-| Crash at process exit | segmentation fault after denoising with a progress callback | destroying the global `VkInstance` from a static destructor during DLL unload | the library-global instance of the OIDN fork is never destroyed |
-| Fresh clones of the fork | weights submodule not found | relative submodule URL | absolute URL |
 | Crash on lavapipe (Mesa 25.2) | segmentation fault with a fixed input scale or LDR input | without autoexposure the scale pointer is 0, and the driver performs the load inside the untaken uniform branch | the kernels load the scale from an always valid address, then select it (bit-identical outputs) |
 
 The KHR cooperative matrix path also produced wrong results on the AMD integrated GPU
@@ -170,78 +127,179 @@ GPUs, and other GPUs use the fallback kernel, which passes all tests on the AMD 
 
 ## Performance
 
-### Method
+The reference numbers are the [GPU time](#gpu-time-main-metric) and
+[per-image latency](#per-image-latency-secondary-metric) tables below, measured on 2026-10-19 with
+the protocol described here. Everything needed to reproduce them (programs, scripts, raw logs) is in
+[`docs/benchmarks`](benchmarks). The sections after them (per-layer times, optimization history,
+experiments) are development measurements: mostly single runs, comparable within a section but not
+with the reference tables.
 
-- **OIDN fork and CUDA**: `oidnBenchmark -d <device> -r "RT.hdr_alb_nrm.*"` (wall-clock time per
-  image with device buffers, after warm-up), `-q fast` for the fast quality.
-- **vk_oidn**: `vk_oidn_denoise_test ... -n 50`, which records 50 `cmdDenoise` calls in one
-  command buffer between two GPU timestamps and reports the average GPU time per image.
-- **Per-layer times**: OIDN's microbenchmark build (`OIDN_MICROBENCH`) for the fork, and
-  `VK_OIDN_PROFILE=1` for vk_oidn (GPU timestamps around each dispatch of the first tile).
+### What is compared
 
-All numbers are for the `hdr + albedo + normal` model on the RTX PRO 4500 Blackwell. 3840x2160 is
-processed in 2 tiles (OIDN's default maximum of 2160x2160 pixels per tile).
+| Column | Program | Kernels | Host runtime |
+|--------|---------|---------|--------------|
+| **OIDN 2.5.1 CUDA** | official Open Image Denoise 2.5.1 Windows binaries, CUDA device (its CUDA library contains native code for Blackwell, `sm_120`) | OIDN's CUDA kernels | OIDN |
+| **vk_oidn** | vk_oidn 0.2.0 (commit `26555d7`) | vk_oidn's Slang kernels | vk_oidn: everything recorded in the application's command buffer |
 
-### Final results
+The comparison is between two implementations of the same OIDN neural network, with the same
+weights: OIDN's CUDA kernels and vk_oidn's Vulkan kernels. It is not a comparison between CUDA and
+Vulkan as programming interfaces.
 
-| Resolution | Quality | OIDN 2.5.1 CUDA | OIDN fork, GLSL | OIDN fork, Slang | vk_oidn, no sub-pixel | vk_oidn 0.1 | **vk_oidn, staged weights** |
-|------------|---------|-----------------|-----------------|------------------|-----------------------|-------------|-----------------------------|
-| 1280x720   | high    | 3.50 ms         | 3.67 ms         | 3.43 ms          |                       |             |                             |
-| 1920x1080  | high    | 8.10 ms         | 8.12 ms         | 7.50 ms          | 7.29 ms               | 6.72 ms     | **5.01 ms**                 |
-| 3840x2160  | high    | 34.65 ms        | 33.66 ms        | 30.72 ms         | 30.22 ms              | 27.83 ms    | **22.77 ms**                |
-| 1280x720   | fast    | 2.36 ms         | 1.88 ms         | 1.90 ms          |                       |             |                             |
-| 1920x1080  | fast    | 5.55 ms         | 4.14 ms         | 4.17 ms          | 3.96 ms               | 3.65 ms     | **2.89 ms**                 |
-| 3840x2160  | fast    | 23.41 ms        | 16.50 ms        | 16.50 ms         | 16.03 ms              | 14.63 ms    | **12.55 ms**                |
+**Workload**, identical for both: RT filter, `hdr + albedo + normal` model, HDR input, FP32 RGB
+images in device memory; 1280x720, 1920x1080 and 3840x2160; high and fast quality. 3840x2160 is
+processed in 2 tiles by both (OIDN: tile size 2016x2160, 2x1 tiles; vk_oidn: 2 tiles). The inputs
+are random, with the distributions of OIDN's `oidnBenchmark` (color in [0, 100], albedo in [0, 1],
+normal in [-1, 1]); the time does not depend on the pixel values (vk_oidn, 1920x1080 high, two
+different input sets alternated 3 times: 5.576-5.589 ms and 5.589-5.597 ms).
 
-vk_oidn is 1.5x (high) to 1.9x (fast) faster than OIDN's CUDA backend on this GPU (balanced
-quality: 4.91 ms at 1080p, 22.30 ms at 4K). The last column stages the weights of the
-convolutions in shared memory (see below); the outputs are bit-identical to the previous
-version. Without the sub-pixel decomposition, vk_oidn 0.1 runs the same kernels as the fork and
-is slightly faster because everything is recorded in the application's command buffer, with no
-host-side overhead. Storage image views instead of buffers do not change the time (7.39 ms vs
-7.31 ms before the sub-pixel decomposition).
+**Machine**: NVIDIA RTX PRO 4500 Blackwell, driver 617.42 (default settings, clocks not locked),
+AMD Ryzen 9 7950X, Windows 11 (build 26200). vk_oidn built with MSVC 19.44, Slang 2026.17, Vulkan
+SDK 1.4.363.0; `oidn_gpu_bench` built with MSVC 19.51 against the official 2.5.1 SDK and CUDA
+12.8 (for the CUDA events only: the denoising runs in the official OIDN CUDA library).
 
-The last column was measured while another application intermittently used the GPU: each
-configuration waited until the GPU was idle for 10 s and the best of 3 runs of `-n 20` is given.
+### Metrics
+
+**GPU time (main metric)**: the time per image when denoising runs back to back, as in a rendering
+pipeline. Each implementation denoises a warm-up batch of 50 images, then a timed batch of 50
+images without waiting between them, and synchronizes once at the end; the time of the timed batch
+is divided by 50.
+
+- OIDN 2.5.1 CUDA: [`oidn_gpu_bench`](benchmarks/oidn_gpu_bench.cpp), built against the official
+  2.5.1 SDK and run with its DLLs. It creates the buffers in device memory (`OIDN_STORAGE_DEVICE`,
+  like `oidnBenchmark`), calls `oidnExecuteFilterAsync` 50 times, then `oidnSyncDevice`, and
+  measures the host time from the first call to the end of the synchronization, and the GPU time
+  between CUDA events recorded on the device's stream before and after the batch.
+- vk_oidn: `vk_oidn_denoise_test -n 50` records 50 `cmdDenoise` calls in one command buffer,
+  submits it and waits; it measures the host time from the submission to the end of the wait, and
+  Vulkan timestamps written before and after the 50 denoisings.
+
+The tables use the host-measured batch time, the same clock for both; it agrees with the GPU timers
+(CUDA events and Vulkan timestamps) within 0.011 ms in every run. OIDN's host code needs 1.1-3.5 ms
+per image to enqueue the work at 720p and 1080p and 16.5-24.5 ms at 4K, always less than the GPU
+time, so the OIDN batches are bound by the GPU (vk_oidn's batch is a single command buffer).
+
+**Per-image latency (secondary metric)**: the metric of OIDN's `oidnBenchmark`: for each image,
+execute and wait for the result; two warm-up runs, then as many runs as fit in 0.5 s (at least
+3). OIDN 2.5.1 CUDA is measured with the official `oidnBenchmark`; vk_oidn with
+`vk_oidn_denoise_test --bench`, which records the command buffer, submits it and waits for each
+image, with the same warm-up and run count rules. This metric adds the host-side work and the
+synchronization of every image.
+
+**Repetitions**: every configuration (implementation x 3 resolutions x 2 qualities) was run 5
+times, interleaved: round 1 runs all configurations, then round 2, and so on. Each run started
+after the GPU utilization had been below 5% for 10 s. The tables give the **median of the 5 runs**
+with the minimum and maximum in brackets; ratios are ratios of the medians. The GPU clocks were not
+locked: in one round, all implementations were about 8% slower (visible in the maximum values), and
+absolute times vary by a few percent between sessions; since the rounds are interleaved, this
+affects both columns alike, and the ratios are stable (see the per-round ratios below). The rounds
+also ran two internal development builds, which are not part of the published results; their
+entries are removed from the published logs.
+
+### GPU time (main metric)
+
+Milliseconds per image, median [min-max] of 5 runs:
+
+| Resolution | Quality | OIDN 2.5.1 CUDA     | **vk_oidn**             | CUDA / vk_oidn |
+|------------|---------|---------------------|-------------------------|----------------|
+| 1280x720   | high    | 3.56 [3.53-3.71]    | **2.48** [2.41-2.65]    | **1.43x**      |
+| 1920x1080  | high    | 8.56 [8.42-9.16]    | **5.65** [5.51-6.04]    | **1.51x**      |
+| 3840x2160  | high    | 35.89 [34.90-38.95] | **24.39** [23.71-26.07] | **1.47x**      |
+| 1280x720   | fast    | 2.46 [2.39-2.62]    | **1.35** [1.31-1.45]    | **1.82x**      |
+| 1920x1080  | fast    | 5.80 [5.62-6.22]    | **3.18** [3.12-3.48]    | **1.83x**      |
+| 3840x2160  | fast    | 24.29 [23.70-26.39] | **13.67** [13.26-14.18] | **1.78x**      |
+
+vk_oidn is **1.43-1.51x** faster than OIDN 2.5.1 CUDA in high quality and **1.78-1.83x** in fast
+quality. Within each round, the ratio (from the GPU timers) was 1.34-1.66x in high quality and
+1.71-1.87x in fast quality.
+
+### Independent check with Nsight Systems
+
+The same timed batches were profiled with **Nsight Systems 2026.5.1**, which records the GPU
+execution of CUDA kernels and of Vulkan command buffers with the same tool
+([`nsys_profile_all.py`](benchmarks/nsys_profile_all.py), 3 interleaved runs per configuration,
+idle GPU before each run):
+
+- OIDN 2.5.1 CUDA: `oidn_gpu_bench`, `--trace=cuda`; the kernels and memory operations launched
+  between the two CUDA events of the timed batch (33 per image, 63 at 4K). The table gives the time
+  during which at least one of them was executing: the gaps between kernels are **removed**, which
+  favors OIDN's CUDA device.
+- vk_oidn: `vk_oidn_denoise_test -n 50`, `--trace=vulkan --vulkan-gpu-workload=individual`; the
+  command buffer of the timed batch (including the barriers between dispatches).
+
+Milliseconds per image, median [min-max] of 3 runs:
+
+| Resolution | Quality | OIDN 2.5.1 CUDA (kernels only) | **vk_oidn**             | CUDA / vk_oidn |
+|------------|---------|--------------------------------|-------------------------|----------------|
+| 1280x720   | high    | 3.63 [3.62-3.65]               | **2.46** [2.44-2.46]    | **1.48x**      |
+| 1920x1080  | high    | 8.60 [8.42-8.71]               | **5.62** [5.54-5.71]    | **1.53x**      |
+| 3840x2160  | high    | 36.93 [36.10-37.17]            | **24.05** [23.92-24.28] | **1.54x**      |
+| 1280x720   | fast    | 2.41 [2.36-2.45]               | **1.32** [1.29-1.33]    | **1.82x**      |
+| 1920x1080  | fast    | 5.91 [5.89-5.92]               | **3.25** [3.12-3.25]    | **1.82x**      |
+| 3840x2160  | fast    | 24.79 [24.55-25.15]            | **13.33** [13.33-13.41] | **1.86x**      |
+
+Nsight Systems confirms the main table: vk_oidn is 1.48-1.54x faster than OIDN 2.5.1 CUDA in high
+quality and 1.82-1.86x in fast quality, even with the gaps between CUDA kernels removed. The CUDA
+kernels kept the GPU busy 96.9-99.5% of the batch (99.0% at 1080p high, 99.5% at 4K high; the rest
+is the usual gap between consecutive kernels): the CUDA time does not include waiting for the host.
+The ratios are slightly higher than in the main table because CUDA tracing adds a small overhead to
+the CUDA run; the main table, measured without a profiler, is the reference.
+
+### Per-image latency (secondary metric)
+
+Milliseconds per image, `oidnBenchmark` method, median [min-max] of 5 runs (a separate session,
+before the GPU time runs):
+
+| Resolution | Quality | OIDN 2.5.1 CUDA     | **vk_oidn**             | CUDA / vk_oidn |
+|------------|---------|---------------------|-------------------------|----------------|
+| 1280x720   | high    | 3.57 [3.48-3.67]    | **2.51** [2.47-2.53]    | **1.42x**      |
+| 1920x1080  | high    | 8.28 [8.07-8.32]    | **5.62** [5.59-5.99]    | **1.47x**      |
+| 3840x2160  | high    | 34.68 [34.60-35.77] | **23.76** [23.55-24.31] | **1.46x**      |
+| 1280x720   | fast    | 2.37 [2.32-2.44]    | **1.40** [1.40-1.42]    | **1.69x**      |
+| 1920x1080  | fast    | 5.52 [5.37-5.62]    | **3.26** [3.21-3.27]    | **1.69x**      |
+| 3840x2160  | fast    | 23.32 [23.29-24.28] | **13.45** [13.21-13.61] | **1.73x**      |
+
+The per-image latency of OIDN CUDA is close to its GPU time: `oidn_gpu_bench` measured both in
+the same runs, and the latency was within 0-4% of the GPU time (its host work overlaps with the GPU
+work). vk_oidn's latency was 0.15-0.47 ms above its GPU time measured in the same runs (recording
+the command buffer, submission, and wake-up after the wait).
+
+### Accuracy in the benchmark configuration
+
+Same metric as in the validation results, on the 1920x1080 synthetic image (`images/hd`), against
+the official OIDN 2.5.1 CPU device ([`accuracy.py`](benchmarks/accuracy.py)):
+
+| Quality | OIDN 2.5.1 CUDA | vk_oidn  | vk_oidn vs CUDA |
+|---------|-----------------|----------|-----------------|
+| high    | 0.000592        | 0.000341 | 0.000585        |
+| fast    | 0.001081        | 0.001135 | 0.001382        |
+
+Average relative error; there are no outliers in any comparison. vk_oidn is as accurate as OIDN's
+CUDA device: it is faster without giving up precision.
+
+### Reproducing
+
+```
+# programs: the official OIDN 2.5.1 package and the vk_oidn build to measure
+export OIDN_SDK=<oidn-2.5.1.x64.windows> VK_OIDN_BUILD=<vk_oidn build>
+cmake -S docs/benchmarks -B docs/benchmarks/build -DOIDN_SDK=$OIDN_SDK
+cmake --build docs/benchmarks/build --config Release
+cd docs/benchmarks
+python gen_bench_inputs.py
+python bench_gpu.py           # about 20 minutes
+python bench_latency.py       # about 20 minutes
+NSYS=<Nsight Systems>/target-windows-x64/nsys.exe python nsys_profile_all.py   # about 15 minutes;
+    # Vulkan tracing needs one Nsight Systems Vulkan trace run as administrator first (layer registration)
+python accuracy.py <images/hd>
+python make_tables.py         # the tables above, from results/*.json
+```
+
+[`docs/benchmarks/results`](benchmarks/results) has the raw output of every run of the tables above
+(`bench_gpu_raw.log`, `bench_latency_raw.log`; the local paths are replaced by the names of the
+environment variables), the parsed values (`*.json`), the Nsight Systems log
+(`nsys_raw.log`, `nsys_results.json`; the reports themselves are not stored) and the accuracy log.
 
 Memory (scratch + weights) for 1920x1080: 384 MB (base network), 518 MB (large network),
 256 MB (small network); 3840x2160 in 2 tiles: 799 MB.
-
-### Laptop results (RTX 3500 Ada Generation)
-
-Measured with vk_oidn 0.1, before the weights were staged in shared memory.
-Same method and models, on an NVIDIA RTX 3500 Ada Generation Laptop GPU (12 GB, 95 W maximum
-board power, driver 616.64, Vulkan 1.4.351), Core i7-13800H, Windows 11, on AC power with the
-Balanced power plan. Builds: vk_oidn with Visual Studio 2026 (MSVC 19.51), Slang 2026.17; the OIDN
-fork (commit `6c01cb6`, OIDN 2.5.1 code base) with its Vulkan and CUDA devices, built with Ninja,
-Visual Studio 2026 and CUDA 13.1 (`NVCC_APPEND_FLAGS=-allow-unsupported-compiler`, since CUDA 13.1
-does not yet accept this compiler version). The CUDA column is therefore the CUDA device of the
-fork, which is OIDN 2.5.1's CUDA device built from source, not the official binaries.
-
-Laptop clocks vary with temperature, so every configuration was run 3 times (each a full
-`oidnBenchmark` or `-n 50` run) and the table gives the **best** of the 3; the spread between runs
-is 2-10% at 720p/1080p and up to 20% at 4K (e.g. Slang 4K high: 89.3 / 106.6 / 107.2 ms).
-
-| Resolution | Quality | OIDN CUDA (fork) | OIDN fork, GLSL | OIDN fork, Slang | vk_oidn, no sub-pixel | **vk_oidn** |
-|------------|---------|------------------|-----------------|------------------|-----------------------|-------------|
-| 1280x720   | high    | 9.44 ms          | 8.92 ms         | 9.05 ms          | 9.17 ms               | **8.57 ms** |
-| 1920x1080  | high    | 23.45 ms         | 22.18 ms        | 21.47 ms         | 21.20 ms              | **19.95 ms** |
-| 3840x2160  | high    | 96.52 ms         | 95.00 ms        | 89.34 ms         | 85.57 ms              | **86.51 ms** |
-| 1280x720   | fast    | 6.45 ms          | 4.68 ms         | 5.26 ms          | 4.83 ms               | **4.45 ms** |
-| 1920x1080  | fast    | 14.33 ms         | 11.30 ms        | 11.63 ms         | 11.47 ms              | **10.64 ms** |
-| 3840x2160  | fast    | 63.06 ms         | 47.68 ms        | 49.69 ms         | 48.84 ms              | **43.64 ms** |
-
-vk_oidn is 1.1-1.2x (high) and 1.35-1.45x (fast) faster than the CUDA device on this GPU, a
-similar ratio to the Blackwell desktop GPU, which is about 3x faster in absolute terms. Other
-observations, compared to the desktop GPU:
-
-- The sub-pixel decomposition gains 6-8% at 720p/1080p in both qualities and 11% at 4K fast,
-  but nothing at 4K high quality (within the run-to-run spread).
-- The Slang kernels are faster than the GLSL kernels in high quality at 1080p and 4K (3-6%), as
-  on Blackwell, but 3-12% *slower* in fast quality (FP16 accumulation), where they were equal on
-  Blackwell. The `-O1` choice and the tile configuration were tuned on Blackwell and may not be
-  optimal on Ada.
-- Memory use is identical (385.6 MB at 1080p high, 800.6 MB at 4K high in 2 tiles).
 
 ### Per-layer times (vk_oidn, 1920x1088 tile, high quality)
 
@@ -300,8 +358,7 @@ row, NF = 16-channel output blocks per workgroup; accumulators per subgroup = 2 
 
 Slang optimization level (step 7, cooperative matrix kernels only): `-O0` 8.59 ms, `-O1` 7.50 ms,
 `-O2` 8.61 ms, `-O3` 8.60 ms. The SPIR-V from `-O1` lets the NVIDIA driver produce better code
-than the other levels and than glslang; this should be re-checked with new Slang or driver
-versions.
+than the other levels; this should be re-checked with new Slang or driver versions.
 
 ### Experiment: `VK_NV_cooperative_matrix2`
 

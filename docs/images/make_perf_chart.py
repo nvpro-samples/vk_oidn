@@ -1,22 +1,36 @@
 # Copyright 2026 NVIDIA Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-"""Performance chart for the vk_oidn README: GPU time per image, vk_oidn 0.1.3 vs OIDN 2.5.1 CUDA.
-Writes perf_light.png and perf_dark.png next to this script. Requires matplotlib."""
+"""Performance chart for the vk_oidn README: GPU time per image, vk_oidn vs Open Image Denoise 2.5.1
+CUDA, median of the runs in ../benchmarks/results/bench_gpu_results.json (see
+docs/validation_and_performance.md). Writes perf_light.png and perf_dark.png next to this script.
+Requires matplotlib."""
+import json
 import os
+import statistics
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(HERE, '..', 'benchmarks', 'results', 'bench_gpu_results.json')) as f:
+  RESULTS = json.load(f)
+
+
+def median(name, res, quality):
+  return statistics.median(RESULTS['%s|batched|%s|%s' % (name, res, quality)])
+
+
 DATA = {  # resolution -> quality -> (vk_oidn ms, CUDA ms)
-  '1920x1080': {'High quality': (5.01, 8.10), 'Fast quality': (2.89, 5.55)},
-  '3840x2160': {'High quality': (22.77, 34.65), 'Fast quality': (12.55, 23.41)},
+  res: {label: (median('vk_oidn', res, q), median('oidn_cuda', res, q)) for label, q in
+        (('High quality', 'high'), ('Fast quality', 'fast'))}
+  for res in ('1920x1080', '3840x2160')
 }
 THEMES = {
   'light': dict(surface='#fcfcfb', text='#0b0b0b', text2='#52514e', grid='#e4e3df', s1='#2a78d6', s2='#eb6834'),
   'dark': dict(surface='#1a1a19', text='#f0efec', text2='#c3c2b7', grid='#3a3936', s1='#3987e5', s2='#d95926'),
 }
-SERIES = ['vk_oidn 0.1.3 (Vulkan)', 'Open Image Denoise 2.5.1 (CUDA)']
+SERIES = ['vk_oidn 0.2.0 (Vulkan)', 'Open Image Denoise 2.5.1 (CUDA)']
 
 
 def draw(mode):
@@ -55,10 +69,10 @@ def draw(mode):
                    bbox_to_anchor=(0.5, 1.0), handlelength=1.2, handleheight=0.9)
   for txt in leg.get_texts():
     txt.set_color(t['text'])
-  fig.text(0.5, 0.005, 'NVIDIA RTX PRO 4500 Blackwell, HDR color + albedo + normal',
+  fig.text(0.5, 0.005, 'NVIDIA RTX PRO 4500 Blackwell, HDR color + albedo + normal, median of 5 runs',
            ha='center', va='bottom', fontsize=9, color=t['text2'])
   fig.tight_layout(rect=(0, 0.04, 1, 0.9), w_pad=3)
-  fig.savefig(os.path.join(os.path.dirname(os.path.abspath(__file__)), f'perf_{mode}.png'), facecolor=t['surface'])
+  fig.savefig(os.path.join(HERE, f'perf_{mode}.png'), facecolor=t['surface'])
   plt.close(fig)
 
 

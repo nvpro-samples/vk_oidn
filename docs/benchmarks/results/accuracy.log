@@ -1,0 +1,6 @@
+high  cuda       avg relative error vs CPU 0.000592, outliers 0
+high  vk_oidn    avg relative error vs CPU 0.000341, outliers 0
+high  vk_oidn vs CUDA: avg relative error 0.000585, outliers 0
+fast  cuda       avg relative error vs CPU 0.001081, outliers 0
+fast  vk_oidn    avg relative error vs CPU 0.001135, outliers 0
+fast  vk_oidn vs CUDA: avg relative error 0.001382, outliers 0

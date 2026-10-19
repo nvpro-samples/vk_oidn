@@ -7,6 +7,8 @@
 
 #include <vulkan/vulkan.h>
 #include "vk_oidn/vk_oidn.h"
+#include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -470,6 +472,7 @@ static void printUsage()
          "                            [--srgb] [--clean_aux] [-q high|balanced|fast] [-t float|half]\n"
          "                            [--is inputScale] [--maxmem MB] [-o output.pfm] [-r ref.pfm]\n"
          "                            [--maxerror e] [-n benchmarkRuns] [-d deviceIndex]\n"
+         "                            [--bench] (wall-clock time per image like oidnBenchmark)\n"
          "                            [--images] (use RGBA storage image views instead of buffers)\n"
          "                            [--validation] (Khronos validation layer, fails on errors)\n");
 }
@@ -484,6 +487,7 @@ int main(int argc, char* argv[])
     bool half = false;
     bool useImages = false;
     bool validation = false;
+    bool benchSync = false;
     float inputScale = std::numeric_limits<float>::quiet_NaN();
     double maxError = 0.003;
     int numRuns = 0, deviceIndex = -1;
@@ -513,6 +517,7 @@ int main(int argc, char* argv[])
       else if (arg == "-n")          numRuns = std::stoi(next());
       else if (arg == "-d")          deviceIndex = std::stoi(next());
       else if (arg == "--images")    useImages = true;
+      else if (arg == "--bench")     benchSync = true;
       else if (arg == "--validation") validation = true;
       else { printUsage(); return 1; }
     }
@@ -687,7 +692,10 @@ int main(int argc, char* argv[])
     if (useImages)
       printf("Output alpha preserved: %s\n", alphaErrors == 0 ? "yes" : "NO");
 
-    // Benchmark
+    // Benchmark: a warm-up batch of numRuns back-to-back denoisings, then a timed batch, recorded
+    // into one command buffer and submitted once. Prints the GPU time between timestamps written
+    // before and after the batch, and the batched wall-clock time (host time from the submission to
+    // the end of the wait), both divided by numRuns.
     if (numRuns > 0)
     {
       VkQueryPoolCreateInfo queryInfo{VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO};
@@ -695,21 +703,70 @@ int main(int argc, char* argv[])
       queryInfo.queryCount = 2;
       VkQueryPool queryPool;
       VK_CHECK(vkCreateQueryPool(app.device, &queryInfo, nullptr, &queryPool));
-      vkResetQueryPool(app.device, queryPool, 0, 2);
 
-      cmd = app.beginCommands();
-      vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, queryPool, 0);
-      for (int run = 0; run < numRuns; ++run)
-        denoiser->cmdDenoise(cmd, denoiseInputs);
-      vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, 1);
-      app.submitAndWait(cmd);
+      double batchedSeconds = 0.0;
+      for (int batch = 0; batch < 2; ++batch) // warm-up batch, timed batch
+      {
+        vkResetQueryPool(app.device, queryPool, 0, 2);
+        cmd = app.beginCommands();
+        vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, queryPool, 0);
+        for (int run = 0; run < numRuns; ++run)
+          denoiser->cmdDenoise(cmd, denoiseInputs);
+        vkCmdWriteTimestamp(cmd, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, 1);
+        const auto t0 = std::chrono::steady_clock::now();
+        app.submitAndWait(cmd);
+        batchedSeconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+      }
 
       uint64_t timestamps[2];
       VK_CHECK(vkGetQueryPoolResults(app.device, queryPool, 0, 2, sizeof(timestamps), timestamps,
                                      sizeof(uint64_t), VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT));
       const double msec = double(timestamps[1] - timestamps[0]) * app.timestampPeriod * 1e-6 / numRuns;
       printf("GPU time: %.3f msec/image (%d runs)\n", msec, numRuns);
+      printf("Batched wall-clock: %.3f msec/image (%d runs)\n", batchedSeconds * 1000.0 / numRuns, numRuns);
       vkDestroyQueryPool(app.device, queryPool, nullptr);
+    }
+
+    // Benchmark with the method of oidnBenchmark (same metric as Open Image Denoise's numbers): for
+    // each image, the denoiser is recorded into a command buffer (reused, like an application's per
+    // frame command buffer), submitted and waited for; the wall-clock time per image includes the
+    // host recording, the submission and the synchronization. Two warm-up runs, the second one
+    // timed to run the benchmark for at least 0.5 s (and at least 3 runs).
+    if (benchSync)
+    {
+      VkCommandBufferAllocateInfo allocInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
+      allocInfo.commandPool = app.commandPool;
+      allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+      allocInfo.commandBufferCount = 1;
+      VkCommandBuffer benchCmd;
+      VK_CHECK(vkAllocateCommandBuffers(app.device, &allocInfo, &benchCmd));
+      auto runOnce = [&]()
+      {
+        VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        VK_CHECK(vkBeginCommandBuffer(benchCmd, &beginInfo));
+        denoiser->cmdDenoise(benchCmd, denoiseInputs);
+        VK_CHECK(vkEndCommandBuffer(benchCmd));
+        VkSubmitInfo submit{VK_STRUCTURE_TYPE_SUBMIT_INFO};
+        submit.commandBufferCount = 1;
+        submit.pCommandBuffers = &benchCmd;
+        VK_CHECK(vkQueueSubmit(app.queue, 1, &submit, VK_NULL_HANDLE));
+        VK_CHECK(vkQueueWaitIdle(app.queue));
+      };
+      using Clock = std::chrono::steady_clock;
+      auto seconds = [](Clock::time_point t0) { return std::chrono::duration<double>(Clock::now() - t0).count(); };
+
+      runOnce(); // first warm-up run
+      Clock::time_point t0 = Clock::now();
+      runOnce(); // second warm-up run, timed
+      const int numBenchRuns = std::max(int(0.5 / seconds(t0)), 3);
+
+      t0 = Clock::now();
+      for (int run = 0; run < numBenchRuns; ++run)
+        runOnce();
+      const double msec = seconds(t0) * 1000.0 / numBenchRuns;
+      printf("Wall-clock time: %.3f msec/image (%d runs, oidnBenchmark method)\n", msec, numBenchRuns);
+      vkFreeCommandBuffers(app.device, app.commandPool, 1, &benchCmd);
     }
 
     for (auto& b : imageBuffers)

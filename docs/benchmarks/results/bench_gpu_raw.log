@@ -1,0 +1,392 @@
+
+===== run started 2026-10-19 10:51:58 =====
+--- oidn_cuda 1280x720 high rep 0: <OIDN_GPU_BENCH> cuda 1280 720 high 50
+Device: CUDA, 1280x720, quality high, N = 50
+Batched wall-clock: 3.564 msec/image
+CUDA events: 3.564 msec/image
+Enqueue time: 1.535 msec/image
+Sync latency: 3.585 msec/image (134 runs)
+
+--- vk_oidn 1280x720 high rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 171.9 MB
+GPU time: 2.409 msec/image (50 runs)
+Batched wall-clock: 2.412 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 fast rep 0: <OIDN_GPU_BENCH> cuda 1280 720 fast 50
+Device: CUDA, 1280x720, quality fast, N = 50
+Batched wall-clock: 2.421 msec/image
+CUDA events: 2.420 msec/image
+Enqueue time: 1.127 msec/image
+Sync latency: 2.438 msec/image (212 runs)
+
+--- vk_oidn 1280x720 fast rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 113.7 MB
+GPU time: 1.327 msec/image (50 runs)
+Batched wall-clock: 1.329 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 high rep 0: <OIDN_GPU_BENCH> cuda 1920 1080 high 50
+Device: CUDA, 1920x1080, quality high, N = 50
+Batched wall-clock: 8.418 msec/image
+CUDA events: 8.417 msec/image
+Enqueue time: 3.220 msec/image
+Sync latency: 8.435 msec/image (60 runs)
+
+--- vk_oidn 1920x1080 high rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 385.6 MB
+GPU time: 5.616 msec/image (50 runs)
+Batched wall-clock: 5.622 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 fast rep 0: <OIDN_GPU_BENCH> cuda 1920 1080 fast 50
+Device: CUDA, 1920x1080, quality fast, N = 50
+Batched wall-clock: 5.712 msec/image
+CUDA events: 5.712 msec/image
+Enqueue time: 2.347 msec/image
+Sync latency: 5.729 msec/image (83 runs)
+
+--- vk_oidn 1920x1080 fast rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 256.2 MB
+GPU time: 3.160 msec/image (50 runs)
+Batched wall-clock: 3.163 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 high rep 0: <OIDN_GPU_BENCH> cuda 3840 2160 high 50
+Device: CUDA, 3840x2160, quality high, N = 50
+Batched wall-clock: 35.141 msec/image
+CUDA events: 35.138 msec/image
+Enqueue time: 23.828 msec/image
+Sync latency: 35.329 msec/image (14 runs)
+
+--- vk_oidn 3840x2160 high rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 2, memory: 800.6 MB
+GPU time: 24.382 msec/image (50 runs)
+Batched wall-clock: 24.388 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 fast rep 0: <OIDN_GPU_BENCH> cuda 3840 2160 fast 50
+Device: CUDA, 3840x2160, quality fast, N = 50
+Batched wall-clock: 24.288 msec/image
+CUDA events: 24.286 msec/image
+Enqueue time: 16.541 msec/image
+Sync latency: 23.940 msec/image (20 runs)
+
+--- vk_oidn 3840x2160 fast rep 0: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 2, memory: 532.8 MB
+GPU time: 13.251 msec/image (50 runs)
+Batched wall-clock: 13.257 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 high rep 1: <OIDN_GPU_BENCH> cuda 1280 720 high 50
+Device: CUDA, 1280x720, quality high, N = 50
+Batched wall-clock: 3.552 msec/image
+CUDA events: 3.551 msec/image
+Enqueue time: 1.426 msec/image
+Sync latency: 3.667 msec/image (140 runs)
+
+--- vk_oidn 1280x720 high rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 171.9 MB
+GPU time: 2.422 msec/image (50 runs)
+Batched wall-clock: 2.425 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 fast rep 1: <OIDN_GPU_BENCH> cuda 1280 720 fast 50
+Device: CUDA, 1280x720, quality fast, N = 50
+Batched wall-clock: 2.389 msec/image
+CUDA events: 2.389 msec/image
+Enqueue time: 0.970 msec/image
+Sync latency: 2.404 msec/image (186 runs)
+
+--- vk_oidn 1280x720 fast rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 113.7 MB
+GPU time: 1.303 msec/image (50 runs)
+Batched wall-clock: 1.307 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 high rep 1: <OIDN_GPU_BENCH> cuda 1920 1080 high 50
+Device: CUDA, 1920x1080, quality high, N = 50
+Batched wall-clock: 8.557 msec/image
+CUDA events: 8.556 msec/image
+Enqueue time: 3.464 msec/image
+Sync latency: 8.554 msec/image (59 runs)
+
+--- vk_oidn 1920x1080 high rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 385.6 MB
+GPU time: 5.646 msec/image (50 runs)
+Batched wall-clock: 5.650 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 fast rep 1: <OIDN_GPU_BENCH> cuda 1920 1080 fast 50
+Device: CUDA, 1920x1080, quality fast, N = 50
+Batched wall-clock: 5.805 msec/image
+CUDA events: 5.799 msec/image
+Enqueue time: 2.409 msec/image
+Sync latency: 5.839 msec/image (84 runs)
+
+--- vk_oidn 1920x1080 fast rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 256.2 MB
+GPU time: 3.174 msec/image (50 runs)
+Batched wall-clock: 3.178 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 high rep 1: <OIDN_GPU_BENCH> cuda 3840 2160 high 50
+Device: CUDA, 3840x2160, quality high, N = 50
+Batched wall-clock: 35.894 msec/image
+CUDA events: 35.892 msec/image
+Enqueue time: 24.499 msec/image
+Sync latency: 36.115 msec/image (13 runs)
+
+--- vk_oidn 3840x2160 high rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 2, memory: 800.6 MB
+GPU time: 23.710 msec/image (50 runs)
+Batched wall-clock: 23.715 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 fast rep 1: <OIDN_GPU_BENCH> cuda 3840 2160 fast 50
+Device: CUDA, 3840x2160, quality fast, N = 50
+Batched wall-clock: 23.703 msec/image
+CUDA events: 23.702 msec/image
+Enqueue time: 16.179 msec/image
+Sync latency: 23.731 msec/image (20 runs)
+
+--- vk_oidn 3840x2160 fast rep 1: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 2, memory: 532.8 MB
+GPU time: 13.716 msec/image (50 runs)
+Batched wall-clock: 13.721 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 high rep 2: <OIDN_GPU_BENCH> cuda 1280 720 high 50
+Device: CUDA, 1280x720, quality high, N = 50
+Batched wall-clock: 3.651 msec/image
+CUDA events: 3.651 msec/image
+Enqueue time: 1.484 msec/image
+Sync latency: 3.689 msec/image (141 runs)
+
+--- vk_oidn 1280x720 high rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 171.9 MB
+GPU time: 2.482 msec/image (50 runs)
+Batched wall-clock: 2.485 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 fast rep 2: <OIDN_GPU_BENCH> cuda 1280 720 fast 50
+Device: CUDA, 1280x720, quality fast, N = 50
+Batched wall-clock: 2.472 msec/image
+CUDA events: 2.471 msec/image
+Enqueue time: 1.147 msec/image
+Sync latency: 2.491 msec/image (175 runs)
+
+--- vk_oidn 1280x720 fast rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 113.7 MB
+GPU time: 1.443 msec/image (50 runs)
+Batched wall-clock: 1.446 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 high rep 2: <OIDN_GPU_BENCH> cuda 1920 1080 high 50
+Device: CUDA, 1920x1080, quality high, N = 50
+Batched wall-clock: 9.125 msec/image
+CUDA events: 9.123 msec/image
+Enqueue time: 3.649 msec/image
+Sync latency: 9.139 msec/image (53 runs)
+
+--- vk_oidn 1920x1080 high rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 385.6 MB
+GPU time: 6.041 msec/image (50 runs)
+Batched wall-clock: 6.045 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 fast rep 2: <OIDN_GPU_BENCH> cuda 1920 1080 fast 50
+Device: CUDA, 1920x1080, quality fast, N = 50
+Batched wall-clock: 6.224 msec/image
+CUDA events: 6.222 msec/image
+Enqueue time: 2.604 msec/image
+Sync latency: 6.236 msec/image (81 runs)
+
+--- vk_oidn 1920x1080 fast rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 256.2 MB
+GPU time: 3.474 msec/image (50 runs)
+Batched wall-clock: 3.478 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 high rep 2: <OIDN_GPU_BENCH> cuda 3840 2160 high 50
+Device: CUDA, 3840x2160, quality high, N = 50
+Batched wall-clock: 38.946 msec/image
+CUDA events: 38.943 msec/image
+Enqueue time: 26.392 msec/image
+Sync latency: 39.083 msec/image (12 runs)
+
+--- vk_oidn 3840x2160 high rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 2, memory: 800.6 MB
+GPU time: 26.057 msec/image (50 runs)
+Batched wall-clock: 26.066 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 fast rep 2: <OIDN_GPU_BENCH> cuda 3840 2160 fast 50
+Device: CUDA, 3840x2160, quality fast, N = 50
+Batched wall-clock: 26.394 msec/image
+CUDA events: 26.391 msec/image
+Enqueue time: 17.892 msec/image
+Sync latency: 26.488 msec/image (19 runs)
+
+--- vk_oidn 3840x2160 fast rep 2: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 2, memory: 532.8 MB
+GPU time: 14.173 msec/image (50 runs)
+Batched wall-clock: 14.183 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 high rep 3: <OIDN_GPU_BENCH> cuda 1280 720 high 50
+Device: CUDA, 1280x720, quality high, N = 50
+Batched wall-clock: 3.531 msec/image
+CUDA events: 3.530 msec/image
+Enqueue time: 1.753 msec/image
+Sync latency: 3.749 msec/image (136 runs)
+
+--- vk_oidn 1280x720 high rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 171.9 MB
+GPU time: 2.643 msec/image (50 runs)
+Batched wall-clock: 2.648 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 fast rep 3: <OIDN_GPU_BENCH> cuda 1280 720 fast 50
+Device: CUDA, 1280x720, quality fast, N = 50
+Batched wall-clock: 2.618 msec/image
+CUDA events: 2.616 msec/image
+Enqueue time: 1.092 msec/image
+Sync latency: 2.651 msec/image (195 runs)
+
+--- vk_oidn 1280x720 fast rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 113.7 MB
+GPU time: 1.449 msec/image (50 runs)
+Batched wall-clock: 1.453 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 high rep 3: <OIDN_GPU_BENCH> cuda 1920 1080 high 50
+Device: CUDA, 1920x1080, quality high, N = 50
+Batched wall-clock: 9.162 msec/image
+CUDA events: 9.160 msec/image
+Enqueue time: 3.704 msec/image
+Sync latency: 9.192 msec/image (53 runs)
+
+--- vk_oidn 1920x1080 high rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 385.6 MB
+GPU time: 5.502 msec/image (50 runs)
+Batched wall-clock: 5.507 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 fast rep 3: <OIDN_GPU_BENCH> cuda 1920 1080 fast 50
+Device: CUDA, 1920x1080, quality fast, N = 50
+Batched wall-clock: 5.616 msec/image
+CUDA events: 5.615 msec/image
+Enqueue time: 2.327 msec/image
+Sync latency: 5.637 msec/image (88 runs)
+
+--- vk_oidn 1920x1080 fast rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 256.2 MB
+GPU time: 3.247 msec/image (50 runs)
+Batched wall-clock: 3.253 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 high rep 3: <OIDN_GPU_BENCH> cuda 3840 2160 high 50
+Device: CUDA, 3840x2160, quality high, N = 50
+Batched wall-clock: 36.483 msec/image
+CUDA events: 36.472 msec/image
+Enqueue time: 24.848 msec/image
+Sync latency: 36.583 msec/image (13 runs)
+
+--- vk_oidn 3840x2160 high rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 2, memory: 800.6 MB
+GPU time: 24.494 msec/image (50 runs)
+Batched wall-clock: 24.499 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 fast rep 3: <OIDN_GPU_BENCH> cuda 3840 2160 fast 50
+Device: CUDA, 3840x2160, quality fast, N = 50
+Batched wall-clock: 24.798 msec/image
+CUDA events: 24.797 msec/image
+Enqueue time: 16.980 msec/image
+Sync latency: 24.866 msec/image (19 runs)
+
+--- vk_oidn 3840x2160 fast rep 3: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 2, memory: 532.8 MB
+GPU time: 13.668 msec/image (50 runs)
+Batched wall-clock: 13.674 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 high rep 4: <OIDN_GPU_BENCH> cuda 1280 720 high 50
+Device: CUDA, 1280x720, quality high, N = 50
+Batched wall-clock: 3.713 msec/image
+CUDA events: 3.706 msec/image
+Enqueue time: 1.628 msec/image
+Sync latency: 4.146 msec/image (130 runs)
+
+--- vk_oidn 1280x720 high rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 171.9 MB
+GPU time: 2.488 msec/image (50 runs)
+Batched wall-clock: 2.492 msec/image (50 runs)
+
+--- oidn_cuda 1280x720 fast rep 4: <OIDN_GPU_BENCH> cuda 1280 720 fast 50
+Device: CUDA, 1280x720, quality fast, N = 50
+Batched wall-clock: 2.465 msec/image
+CUDA events: 2.465 msec/image
+Enqueue time: 1.005 msec/image
+Sync latency: 2.486 msec/image (205 runs)
+
+--- vk_oidn 1280x720 fast rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1280x720.pfm --alb <BENCH_INPUTS>\albedo_1280x720.pfm --nrm <BENCH_INPUTS>\normal_1280x720.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 113.7 MB
+GPU time: 1.351 msec/image (50 runs)
+Batched wall-clock: 1.354 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 high rep 4: <OIDN_GPU_BENCH> cuda 1920 1080 high 50
+Device: CUDA, 1920x1080, quality high, N = 50
+Batched wall-clock: 8.549 msec/image
+CUDA events: 8.548 msec/image
+Enqueue time: 3.351 msec/image
+Sync latency: 8.561 msec/image (56 runs)
+
+--- vk_oidn 1920x1080 high rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 1, memory: 385.6 MB
+GPU time: 5.681 msec/image (50 runs)
+Batched wall-clock: 5.684 msec/image (50 runs)
+
+--- oidn_cuda 1920x1080 fast rep 4: <OIDN_GPU_BENCH> cuda 1920 1080 fast 50
+Device: CUDA, 1920x1080, quality fast, N = 50
+Batched wall-clock: 5.831 msec/image
+CUDA events: 5.820 msec/image
+Enqueue time: 2.268 msec/image
+Sync latency: 5.842 msec/image (89 runs)
+
+--- vk_oidn 1920x1080 fast rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_1920x1080.pfm --alb <BENCH_INPUTS>\albedo_1920x1080.pfm --nrm <BENCH_INPUTS>\normal_1920x1080.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 1, memory: 256.2 MB
+GPU time: 3.118 msec/image (50 runs)
+Batched wall-clock: 3.122 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 high rep 4: <OIDN_GPU_BENCH> cuda 3840 2160 high 50
+Device: CUDA, 3840x2160, quality high, N = 50
+Batched wall-clock: 34.895 msec/image
+CUDA events: 34.893 msec/image
+Enqueue time: 23.663 msec/image
+Sync latency: 34.927 msec/image (14 runs)
+
+--- vk_oidn 3840x2160 high rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q high -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm, tiles: 2, memory: 800.6 MB
+GPU time: 23.718 msec/image (50 runs)
+Batched wall-clock: 23.723 msec/image (50 runs)
+
+--- oidn_cuda 3840x2160 fast rep 4: <OIDN_GPU_BENCH> cuda 3840 2160 fast 50
+Device: CUDA, 3840x2160, quality fast, N = 50
+Batched wall-clock: 23.945 msec/image
+CUDA events: 23.944 msec/image
+Enqueue time: 16.142 msec/image
+Sync latency: 23.999 msec/image (20 runs)
+
+--- vk_oidn 3840x2160 fast rep 4: <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <BENCH_INPUTS>\color_3840x2160.pfm --alb <BENCH_INPUTS>\albedo_3840x2160.pfm --nrm <BENCH_INPUTS>\normal_3840x2160.pfm -q fast -n 50
+Device: NVIDIA RTX PRO 4500 Blackwell, cooperative matrices: yes
+Weights: rt_hdr_alb_nrm_small, tiles: 2, memory: 532.8 MB
+GPU time: 13.461 msec/image (50 runs)
+Batched wall-clock: 13.465 msec/image (50 runs)
+

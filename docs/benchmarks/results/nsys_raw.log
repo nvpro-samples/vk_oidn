@@ -1,0 +1,110 @@
+
+===== run started 2026-10-19 12:02:03, NVIDIA Nsight Systems version 2026.5.1.161-265138896106v0 =====
+--- oidn_cuda 1280x720 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_high_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 high 50
+cuda: 1650 GPU operations, span 3.700 msec/image, GPU busy 3.625 msec/image (97.96%)
+
+--- vk_oidn 1280x720 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_high_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q high -n 50
+vulkan: 1 GPU operations, span 2.435 msec/image, GPU busy 2.435 msec/image (100.00%)
+
+--- oidn_cuda 1280x720 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_fast_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 fast 50
+cuda: 1650 GPU operations, span 2.437 msec/image, GPU busy 2.364 msec/image (97.03%)
+
+--- vk_oidn 1280x720 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_fast_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 1.290 msec/image, GPU busy 1.290 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_high_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 high 50
+cuda: 1650 GPU operations, span 8.499 msec/image, GPU busy 8.419 msec/image (99.07%)
+
+--- vk_oidn 1920x1080 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_high_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q high -n 50
+vulkan: 1 GPU operations, span 5.537 msec/image, GPU busy 5.537 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_fast_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 fast 50
+cuda: 1650 GPU operations, span 5.974 msec/image, GPU busy 5.892 msec/image (98.62%)
+
+--- vk_oidn 1920x1080 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_fast_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 3.251 msec/image, GPU busy 3.251 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_high_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 high 50
+cuda: 3150 GPU operations, span 37.327 msec/image, GPU busy 37.170 msec/image (99.58%)
+
+--- vk_oidn 3840x2160 high rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_high_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q high -n 50
+vulkan: 1 GPU operations, span 24.284 msec/image, GPU busy 24.284 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_fast_0 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 fast 50
+cuda: 3150 GPU operations, span 24.938 msec/image, GPU busy 24.791 msec/image (99.41%)
+
+--- vk_oidn 3840x2160 fast rep 0: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_fast_0 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 13.331 msec/image, GPU busy 13.331 msec/image (100.00%)
+
+--- oidn_cuda 1280x720 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_high_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 high 50
+cuda: 1650 GPU operations, span 3.703 msec/image, GPU busy 3.630 msec/image (98.04%)
+
+--- vk_oidn 1280x720 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_high_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q high -n 50
+vulkan: 1 GPU operations, span 2.458 msec/image, GPU busy 2.458 msec/image (100.00%)
+
+--- oidn_cuda 1280x720 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_fast_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 fast 50
+cuda: 1650 GPU operations, span 2.487 msec/image, GPU busy 2.409 msec/image (96.83%)
+
+--- vk_oidn 1280x720 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_fast_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 1.331 msec/image, GPU busy 1.331 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_high_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 high 50
+cuda: 1650 GPU operations, span 8.794 msec/image, GPU busy 8.711 msec/image (99.07%)
+
+--- vk_oidn 1920x1080 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_high_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q high -n 50
+vulkan: 1 GPU operations, span 5.625 msec/image, GPU busy 5.625 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_fast_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 fast 50
+cuda: 1650 GPU operations, span 5.990 msec/image, GPU busy 5.911 msec/image (98.70%)
+
+--- vk_oidn 1920x1080 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_fast_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 3.122 msec/image, GPU busy 3.122 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_high_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 high 50
+cuda: 3150 GPU operations, span 36.259 msec/image, GPU busy 36.104 msec/image (99.57%)
+
+--- vk_oidn 3840x2160 high rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_high_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q high -n 50
+vulkan: 1 GPU operations, span 24.053 msec/image, GPU busy 24.053 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_fast_1 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 fast 50
+cuda: 3150 GPU operations, span 25.310 msec/image, GPU busy 25.151 msec/image (99.37%)
+
+--- vk_oidn 3840x2160 fast rep 1: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_fast_1 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 13.413 msec/image, GPU busy 13.413 msec/image (100.00%)
+
+--- oidn_cuda 1280x720 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_high_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 high 50
+cuda: 1650 GPU operations, span 3.719 msec/image, GPU busy 3.647 msec/image (98.07%)
+
+--- vk_oidn 1280x720 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_high_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q high -n 50
+vulkan: 1 GPU operations, span 2.463 msec/image, GPU busy 2.463 msec/image (100.00%)
+
+--- oidn_cuda 1280x720 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1280x720_fast_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1280 720 fast 50
+cuda: 1650 GPU operations, span 2.535 msec/image, GPU busy 2.453 msec/image (96.79%)
+
+--- vk_oidn 1280x720 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1280x720_fast_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1280x720.pfm --alb <benchmarks>\inputs\albedo_1280x720.pfm --nrm <benchmarks>\inputs\normal_1280x720.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 1.322 msec/image, GPU busy 1.322 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_high_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 high 50
+cuda: 1650 GPU operations, span 8.686 msec/image, GPU busy 8.595 msec/image (98.95%)
+
+--- vk_oidn 1920x1080 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_high_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q high -n 50
+vulkan: 1 GPU operations, span 5.709 msec/image, GPU busy 5.709 msec/image (100.00%)
+
+--- oidn_cuda 1920x1080 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_1920x1080_fast_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 1920 1080 fast 50
+cuda: 1650 GPU operations, span 6.004 msec/image, GPU busy 5.919 msec/image (98.58%)
+
+--- vk_oidn 1920x1080 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_1920x1080_fast_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_1920x1080.pfm --alb <benchmarks>\inputs\albedo_1920x1080.pfm --nrm <benchmarks>\inputs\normal_1920x1080.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 3.245 msec/image, GPU busy 3.245 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_high_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 high 50
+cuda: 3150 GPU operations, span 37.097 msec/image, GPU busy 36.930 msec/image (99.55%)
+
+--- vk_oidn 3840x2160 high rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_high_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q high -n 50
+vulkan: 1 GPU operations, span 23.917 msec/image, GPU busy 23.917 msec/image (100.00%)
+
+--- oidn_cuda 3840x2160 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\oidn_cuda_3840x2160_fast_2 --trace=cuda -e PATH=<OIDN_SDK>\bin;<SystemRoot>\System32 <benchmarks>\build\oidn_gpu_bench.exe cuda 3840 2160 fast 50
+cuda: 3150 GPU operations, span 24.689 msec/image, GPU busy 24.545 msec/image (99.42%)
+
+--- vk_oidn 3840x2160 fast rep 2: <NSYS> profile --sample=none --cpuctxsw=none -f true -o <benchmarks>\build\nsys\vk_oidn_3840x2160_fast_2 --trace=vulkan,nvtx --vulkan-gpu-workload=individual <VK_OIDN_BUILD>\vk_oidn_denoise_test.exe --hdr <benchmarks>\inputs\color_3840x2160.pfm --alb <benchmarks>\inputs\albedo_3840x2160.pfm --nrm <benchmarks>\inputs\normal_3840x2160.pfm -q fast -n 50
+vulkan: 1 GPU operations, span 13.332 msec/image, GPU busy 13.332 msec/image (100.00%)
+
