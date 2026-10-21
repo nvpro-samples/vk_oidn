@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 NVIDIA Corporation
+# Portions Copyright 2018 Intel Corporation (Open Image Denoise), modified by NVIDIA
 # SPDX-License-Identifier: Apache-2.0
 
 """Converts Open Image Denoise weights (.tza) into packed vk_oidn weights (.vkoidnw).

@@ -1,9 +1,11 @@
 // Copyright 2026 NVIDIA Corporation
+// Portions Copyright 2018 Intel Corporation (Open Image Denoise), modified by NVIDIA
 // SPDX-License-Identifier: Apache-2.0
 
 // vk_oidn compute kernels (Slang)
 //
-// Derived from the Vulkan backend of Intel(R) Open Image Denoise. All memory is accessed through
+// Derived from a Vulkan backend written for Intel(R) Open Image Denoise, porting the algorithms of
+// its GPU kernels (input/output transfer functions, autoexposure). All memory is accessed through
 // buffer device addresses passed as push constants (entry point uniform parameters), so the
 // kernels need no descriptor sets.
 //

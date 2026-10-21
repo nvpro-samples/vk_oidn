@@ -1,6 +1,7 @@
 # Build directories
 build*/
 out/
+_install/
 
 # Generated files
 *.spv

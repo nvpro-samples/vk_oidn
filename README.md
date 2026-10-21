@@ -232,3 +232,4 @@ requires Python 3 at build time). See [weights/README.md](weights/README.md).
 
 Apache License 2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE). Derived from Intel Open Image
 Denoise; the network weights are from [oidn-weights](https://github.com/RenderKit/oidn-weights).
+vk_oidn is not affiliated with or endorsed by Intel Corporation.

@@ -1,4 +1,5 @@
 // Copyright 2026 NVIDIA Corporation
+// Portions Copyright 2018 Intel Corporation (Open Image Denoise), modified by NVIDIA
 // SPDX-License-Identifier: Apache-2.0
 
 #include "context.h"

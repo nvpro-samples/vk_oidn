@@ -14,6 +14,11 @@ option(VK_OIDN_EMBED_WEIGHTS "Embed the packed weights from the weights folder i
 option(VK_OIDN_BUILD_TESTS "Build the vk_oidn tests" ${PROJECT_IS_TOP_LEVEL})
 option(VK_OIDN_INSTALL "Generate the install rules (SDK package)" ${PROJECT_IS_TOP_LEVEL})
 
+# Install into _install by default, like the other nvpro-samples (and their CI artifacts)
+if(PROJECT_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/_install" CACHE PATH "Install path" FORCE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
